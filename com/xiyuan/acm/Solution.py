@@ -75,11 +75,93 @@ class Solution:
                     indexs[j] += 1
         return uglys[-1]
 
+
+
+
+
+
+    # http://www.lintcode.com/zh-cn/problem/kth-largest-element/
+    # @param k & arr a integer and an array
+    # @return ans a integer
+    def kthLargestElement(self, k, arr):
+        arrLen = len(arr)
+        return self.kthLargestElement1(arrLen - k, arr, 0, arrLen - 1)
+
+    def kthLargestElement1(self, k, arr, left, right):
+        if left == right:
+            return arr[left]
+        else:
+            key = arr[left]
+            i = left
+            j = right
+            while i < j:
+                while i < j and arr[j] >= key:
+                    j -= 1
+                arr[i] = arr[j]
+
+                while i < j and arr[i] <= key:
+                    i += 1
+                arr[j] = arr[i]
+
+            arr[i] = key
+            if i == k:
+                return key
+            elif k < i:
+                return self.kthLargestElement1(k, arr, left, i - 1)
+            else:
+                return self.kthLargestElement1(k, arr, i + 1, right)
+
+
+
+
+    # http://www.lintcode.com/zh-cn/problem/merge-two-sorted-arrays/
+    #@param arrA and arrB: sorted integer array arrA and arrB.
+    #@return: A new sorted integer array
+    def mergeSortedArray(self, arrA, arrB):
+        lenA = len(arrA)
+        lenB = len(arrB)
+        if lenA == 0:
+            return arrB
+        elif lenB == 0:
+            return arrA
+        else:
+            arrNew = []
+            index = 0
+            i = 0
+            j = 0
+            while i < lenA and j < lenB:
+                if arrA[i] <= arrB[j]:
+                    arrNew.append(arrA[i])
+                    i += 1
+                else:
+                    arrNew.append(arrB[j])
+                    j += 1
+                index += 1
+            if i < lenA:
+                arrNew[index:] = arrA[i:]
+            else:
+                arrNew[index:] = arrB[j:]
+            return arrNew
+
 if __name__ == "__main__":
     solution = Solution()
 
-    for n in range(1,12):
-        print(n, solution.nthUglyNumber(n))
+    # A=[1,2,3,4,6,7]
+    # B=[2,4,5]
+    # print(solution.mergeSortedArray(A, B))
+
+
+
+
+    # arr = [1,2,3,4,5]
+    # k = 1
+    # print(solution.kthLargestElement(k, arr))
+
+
+
+
+    # for n in range(1,12):
+    #     print(n, solution.nthUglyNumber(n))
 
 
 
