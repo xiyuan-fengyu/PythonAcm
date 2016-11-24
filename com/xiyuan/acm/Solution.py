@@ -1,5 +1,7 @@
 import sys
 
+from com.xiyuan.acm.model.TreeNode import TreeNode
+
 
 class Solution:
 
@@ -143,8 +145,92 @@ class Solution:
                 arrNew[index:] = arrB[j:]
             return arrNew
 
+
+
+
+
+
+    # http://www.lintcode.com/zh-cn/problem/binary-tree-serialization/
+    # @param root: An object of TreeNode, denote the root of the binary tree.
+    # This method will be invoked first, you should design your own algorithm
+    # to serialize a binary tree which denote by a root node to a string which
+    # can be easily deserialized by your own "deserialize" method later.
+    def serialize(self, root):
+        nodes = []
+        nodes.append(root)
+
+        ser = ""
+        index = 0
+        while index < len(nodes):
+            node = nodes[index]
+            index += 1
+            if node != None:
+                ser += str(node.val) + ","
+                nodes.append(node.left)
+                nodes.append(node.right)
+            else:
+                ser += "#,"
+
+        if ser == "":
+            return "#"
+        else:
+            end = len(ser) - 2
+            while end > -1:
+                if ser[end] == '#':
+                    end -= 2
+                else:
+                    break
+            return ser[0:end + 1]
+
+    # @param data: A string serialized by your serialize method.
+    # This method will be invoked second, the argument data is what exactly
+    # you serialized at method "serialize", that means the data is not given by
+    # system, it's given by your own serialize method. So the format of data is
+    # designed by yourself, and deserialize it here as you serialize it in
+    # "serialize" method.
+    def deserialize(self, data):
+        split = data.split(",")
+        if split[0] == '#':
+            return None
+
+        nodes = []
+        nodes.append(TreeNode(int(split[0])))
+        index = 0
+        splitLen = len(split)
+        while index < splitLen:
+            node = nodes[index]
+            if node != None:
+                leftChild = index * 2 + 1
+                if leftChild < splitLen:
+                    newNode = split[leftChild] != '#' and TreeNode(int(split[leftChild])) or None
+                    nodes.append(newNode)
+                    node.left = newNode
+                rightChild = index * 2 + 2
+                if rightChild < splitLen:
+                    newNode = split[rightChild] != '#' and TreeNode(int(split[rightChild])) or None
+                    nodes.append(newNode)
+                    node.right = newNode
+            index += 1
+        return nodes[0]
+
+
+
+
 if __name__ == "__main__":
     solution = Solution()
+
+    root = TreeNode(1)
+    root.left = TreeNode(2)
+    root.right = TreeNode(3)
+    root.right.left = TreeNode(4)
+    ser = solution.serialize(root)
+    print(ser)
+    print(solution.deserialize(ser).val)
+    print(solution.deserialize(ser).right.left.val)
+
+
+
+
 
     # A=[1,2,3,4,6,7]
     # B=[2,4,5]
