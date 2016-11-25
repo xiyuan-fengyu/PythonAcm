@@ -187,14 +187,11 @@ class Solution:
             index += 1
         return nodes[0]
 
-
-
-
     # http://www.lintcode.com/zh-cn/problem/rotate-string/
     # @param s: a list of char
     # @param offset: an integer
     # @return: nothing
-    def rotateString(self, s, offset, start = None):
+    def rotateString(self, s, offset, start=None):
         if start is None:
             sLen = len(s)
             if sLen == 0:
@@ -224,7 +221,6 @@ class Solution:
                 count += 1
             return count
 
-
     # http://www.lintcode.com/zh-cn/problem/search-range-in-binary-search-tree/
     # @param root: The root of the binary search tree.
     # @param k1 and k2: range k1 to k2.
@@ -248,12 +244,77 @@ class Solution:
 
             return result
 
+    # http://www.lintcode.com/zh-cn/problem/strstr/
+    def strStr(self, source, target):
+        if source is None or target is None:
+            return -1
+
+        lenS = len(source)
+        lenT = len(target)
+        if lenT == 0:
+            return 0
+        elif lenS < lenT:
+            return -1
+        else:
+            for i in range(lenS - lenT + 1):
+                count = 0
+                for j in range(lenT):
+                    if source[i + j] == target[j]:
+                        count += 1
+                    else:
+                        break
+
+                if count == lenT:
+                    return i
+            return -1
+
+    # http://www.lintcode.com/zh-cn/problem/strstr/
+    def strStrKmp(self, source, target):
+        if source is None or target is None:
+            return -1
+
+        lenS = len(source)
+        lenT = len(target)
+        if lenT == 0:
+            return 0
+        elif lenS < lenT:
+            return -1
+        else:
+            j = 0
+            nextArr = self.getKmpNext(target)
+            for i in range(lenS):
+                while j > 0 and source[i] != target[j]:
+                    j = nextArr[j]
+                if source[i] == target[j]:
+                    j += 1
+                if j == lenT:
+                    return i - j + 1
+            return -1
+
+    def getKmpNext(self, target):
+        lenT = len(target)
+        nextArr = [0 for i in range(lenT + 1)]
+        j = 0
+        for i in range(1, lenT):
+            while j > 0 and target[i] != target[j]:
+                j = nextArr[j]
+            if target[i] == target[j]:
+                j += 1
+            nextArr[i + 1] = j
+        return nextArr
+
 
 if __name__ == "__main__":
     solution = Solution()
 
+    # source = "abcdeabceadef"
+    # target = "bcdeabcea"
+    # print(solution.strStr(source, target))
+    # print(solution.strStrKmp(source, target))
 
-    MinStack.test()
+
+
+    # MinStack.test()
 
 
 
