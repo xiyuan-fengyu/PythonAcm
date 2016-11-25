@@ -1,26 +1,22 @@
 import sys
 
+from com.xiyuan.acm.model.MinStack import MinStack
 from com.xiyuan.acm.model.TreeNode import TreeNode
 
 
 class Solution:
-
     """
     http://www.lintcode.com/zh-cn/problem/a-b-problem/problem
     @param a: The first integer
     @param b: The second integer
     @return:  The sum of a and b
     """
+
     def aplusb(self, a, b):
         if b == 0:
             return a
         else:
             return self.aplusb(a ^ b, (a & b) << 1)
-
-
-
-
-
 
     # http://www.lintcode.com/zh-cn/problem/trailing-zeros/
     # @param n a integer
@@ -31,10 +27,6 @@ class Solution:
         else:
             k = n // 5
             return k + self.trailingZeros(k)
-
-
-
-
 
     # http://www.lintcode.com/zh-cn/problem/digit-counts/
     # @param k & n  two integer
@@ -49,10 +41,6 @@ class Solution:
 
         return count
 
-
-
-
-
     # http://www.lintcode.com/zh-cn/problem/ugly-number-ii/
     # @param {int} n an integer.
     # @return {int} the nth prime number as description.
@@ -60,9 +48,9 @@ class Solution:
         if n == 1:
             return 1
 
-        primes = [2,3,5]
+        primes = [2, 3, 5]
         primeLen = len(primes)
-        indexs= [0,0,0]
+        indexs = [0, 0, 0]
         uglys = [1]
         for i in range(n - 1):
             newMin = sys.maxsize
@@ -76,11 +64,6 @@ class Solution:
                 while uglys[indexs[j]] * primes[j] <= newMin:
                     indexs[j] += 1
         return uglys[-1]
-
-
-
-
-
 
     # http://www.lintcode.com/zh-cn/problem/kth-largest-element/
     # @param k & arr a integer and an array
@@ -113,12 +96,9 @@ class Solution:
             else:
                 return self.kthLargestElement1(k, arr, i + 1, right)
 
-
-
-
     # http://www.lintcode.com/zh-cn/problem/merge-two-sorted-arrays/
-    #@param arrA and arrB: sorted integer array arrA and arrB.
-    #@return: A new sorted integer array
+    # @param arrA and arrB: sorted integer array arrA and arrB.
+    # @return: A new sorted integer array
     def mergeSortedArray(self, arrA, arrB):
         lenA = len(arrA)
         lenB = len(arrB)
@@ -144,11 +124,6 @@ class Solution:
             else:
                 arrNew[index:] = arrB[j:]
             return arrNew
-
-
-
-
-
 
     # http://www.lintcode.com/zh-cn/problem/binary-tree-serialization/
     # @param root: An object of TreeNode, denote the root of the binary tree.
@@ -193,13 +168,12 @@ class Solution:
         if split[0] == '#':
             return None
 
-        nodes = []
-        nodes.append(TreeNode(int(split[0])))
+        nodes = [TreeNode(int(split[0]))]
         index = 0
         splitLen = len(split)
         while index < splitLen:
             node = nodes[index]
-            if node != None:
+            if node is not None:
                 leftChild = index * 2 + 1
                 if leftChild < splitLen:
                     newNode = split[leftChild] != '#' and TreeNode(int(split[leftChild])) or None
@@ -216,8 +190,87 @@ class Solution:
 
 
 
+    # http://www.lintcode.com/zh-cn/problem/rotate-string/
+    # @param s: a list of char
+    # @param offset: an integer
+    # @return: nothing
+    def rotateString(self, s, offset, start = None):
+        if start is None:
+            sLen = len(s)
+            if sLen == 0:
+                return
+
+            offset %= sLen
+            if offset != 0:
+                count = 0
+                for i in range(offset):
+                    if count < sLen:
+                        count += self.rotateString(s, offset, i)
+                    else:
+                        break
+        else:
+            sLen = len(s)
+            curChar = s[start]
+            count = 0
+            nextI = (start + offset) % sLen
+            if nextI != start:
+                while nextI != start:
+                    temp = s[nextI]
+                    s[nextI] = curChar
+                    curChar = temp
+                    count += 1
+                    nextI = (nextI + offset) % sLen
+                s[start] = curChar
+                count += 1
+            return count
+
+
+    # http://www.lintcode.com/zh-cn/problem/search-range-in-binary-search-tree/
+    # @param root: The root of the binary search tree.
+    # @param k1 and k2: range k1 to k2.
+    # @return: Return all keys that k1<=key<=k2 in ascending order.
+    def searchRange(self, root, k1, k2):
+        if root is None:
+            return []
+        else:
+            val = root.val
+            result = []
+            if k1 < val:
+                lenR = len(result)
+                result[lenR:] = result
+                result[0:lenR] = self.searchRange(root.left, k1, k2)
+
+            if root.val in range(k1, k2 + 1):
+                result.append(root.val)
+
+            if k2 > val:
+                result[len(result):] = self.searchRange(root.right, k1, k2)
+
+            return result
+
+
 if __name__ == "__main__":
     solution = Solution()
+
+
+    MinStack.test()
+
+
+
+    # root = TreeNode.fromStr("20,8,22,4,12")
+    # print(root)
+    # print(solution.searchRange(root, 10, 22))
+
+
+
+
+
+    # string = list("abcdef")
+    # offset = 3
+    # solution.rotateString(string, offset)
+    # print(string)
+
+
 
     # root = TreeNode.fromStr("1,2,3,#,#,4")
     # ser = solution.serialize(root)
