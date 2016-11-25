@@ -219,14 +219,10 @@ class Solution:
 if __name__ == "__main__":
     solution = Solution()
 
-    root = TreeNode(1)
-    root.left = TreeNode(2)
-    root.right = TreeNode(3)
-    root.right.left = TreeNode(4)
-    ser = solution.serialize(root)
-    print(ser)
-    print(solution.deserialize(ser).val)
-    print(solution.deserialize(ser).right.left.val)
+    # root = TreeNode.fromStr("1,2,3,#,#,4")
+    # ser = solution.serialize(root)
+    # print(ser)
+    # print(solution.deserialize(ser))
 
 
 
