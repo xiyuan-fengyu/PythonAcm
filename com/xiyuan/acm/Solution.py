@@ -304,8 +304,71 @@ class Solution:
         return nextArr
 
 
+
+    # http://www.lintcode.com/zh-cn/problem/first-position-of-target/
+    # @param nums: The integer array
+    # @param target: Target number to find
+    # @return the first position of target in nums, position start from 0
+    def binarySearch(self, nums, target, left = None, right = None):
+        if left is None and right is None:
+            if len(nums) == 0:
+                return -1
+            else:
+                return self.binarySearch(nums, target, 0, len(nums))
+        else:
+            if left >= right:
+                if nums[left] == target:
+                    return left
+                else:
+                    return -1
+            else:
+                mid = (left + right) // 2
+                midVal = nums[mid]
+                if midVal > target:
+                    return self.binarySearch(nums, target, left, mid - 1)
+                elif midVal == target:
+                    return self.binarySearch(nums, target, left, mid)
+                else:
+                    return self.binarySearch(nums, target, mid + 1, right)
+
+
+
+    # http://www.lintcode.com/zh-cn/problem/permutations/
+    # @param nums: A list of Integers.
+    # @return: A list of permutations.
+    def permute(self, nums):
+        le = len(nums)
+        if le == 0:
+            return [[]]
+        elif le == 1:
+            return [nums]
+        else:
+            result = []
+            for i in range(le):
+                item = nums[i]
+                subNums = nums[0:i] + nums[i + 1: le]
+                subResults = self.permute(subNums)
+                for subResult in subResults:
+                    resultItem = [item]
+                    resultItem[1:] = subResult
+                    result.append(resultItem)
+            return result
+
 if __name__ == "__main__":
     solution = Solution()
+
+
+    # arr = [1,2,3]
+    # print(solution.permute(arr))
+
+
+
+    # arr = [1, 2, 3, 3, 4, 5, 10]
+    # target = 3
+    # print(solution.binarySearch(arr, target))
+
+
+
 
     # source = "abcdeabceadef"
     # target = "bcdeabcea"
