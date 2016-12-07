@@ -354,10 +354,42 @@ class Solution:
                     result.append(resultItem)
             return result
 
+    # 素数生成算法，和丑数生成算法一样
+    def primes(self, n):
+        result = [2, 3]
+        if n <= 2:
+            return result[0:n]
+
+        caches = [2, 3]
+        indexs = [0, 0]
+
+        while len(result) < n:
+            last = caches[-1]
+            next = sys.maxsize
+            for i in range(0, len(result)):
+                next = min(next, caches[i] * caches[indexs[i]])
+
+            for i in range(last + 1, next + 1):
+                if i != next:
+                    result.append(i)
+                caches.append(i)
+                indexs.append(0)
+
+            for i in range(0, len(caches)):
+                while caches[i] * caches[indexs[i]] <= next:
+                    indexs[i] += 1
+
+        return result[0:n]
+
 if __name__ == "__main__":
     solution = Solution()
 
+
+    # print(solution.primes(10))
+
+
     # TODO 用非递归完成 permute
+
 
     # arr = [1,2,3]
     # print(solution.permute(arr))
