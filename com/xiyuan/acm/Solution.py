@@ -354,7 +354,7 @@ class Solution:
                     result.append(resultItem)
             return result
 
-    # 素数生成算法，和丑数生成算法一样
+    # 找到前n个素数
     def primes(self, n):
         result = [2, 3]
         if n <= 2:
@@ -381,8 +381,26 @@ class Solution:
 
         return result[0:n]
 
+    # 找到不大于n的所有素数
+    def primesLsThan(self, n):
+        if n <= 3:
+            return [2, 3][0:n - 1]
+
+        result = []
+        nums = [i for i in range(0, n + 1)]
+        isPrime = [True for i in range(0, n + 1)]
+        isPrime[0] = isPrime[1] = False
+        for i in range(2, n + 1):
+            if isPrime[i]:
+                result.append(nums[i])
+                for j in range(i * 2, n + 1, i):
+                    isPrime[j] = False
+        return result
+
 if __name__ == "__main__":
     solution = Solution()
+
+    print(solution.primesLsThan(10))
 
 
     # print(solution.primes(10))
