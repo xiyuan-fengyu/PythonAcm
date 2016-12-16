@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 
 from com.xiyuan.acm.model.MinStack import MinStack
 from com.xiyuan.acm.model.TreeNode import TreeNode
@@ -354,6 +355,91 @@ class Solution:
                     result.append(resultItem)
             return result
 
+    def permuteNoRecursion(self, nums):
+        le = len(nums)
+        if le == 0:
+            return [[]]
+        elif le == 1:
+            return [nums]
+        else:
+            result = []
+            cur = sorted(nums)
+            result.append(cur[0:])
+            isLast = False
+            while not isLast:
+                i = le - 2
+                while i > -1 and cur[i] >= cur[i + 1]:
+                    i -= 1
+                if i > -1:
+                    j = le - 1
+                    while j > i and cur[j] <= cur[i]:
+                        j -= 1
+                    if j > i:
+                        temp = cur[i]
+                        cur[i] = cur[j]
+                        cur[j] = temp
+                        self.quickSortSection(cur, i + 1, le - 1)
+                        result.append(cur[0:])
+                    else:
+                        isLast = True
+                else:
+                    isLast = True
+            return result
+
+    def quickSortSection(self, arr, left, right):
+        if left is None:
+            left = 0
+        if right is None:
+            right = len(arr) - 1
+
+        if left < right:
+            key = arr[left]
+            l = left
+            r = right
+            while l < r:
+                while l < r and arr[r] >= key:
+                    r -= 1
+                arr[l] = arr[r]
+
+                while l < r and arr[l] <= key:
+                    l += 1
+                arr[r] = arr[l]
+            arr[l] = key
+            self.quickSortSection(arr, left, l - 1)
+            self.quickSortSection(arr, l + 1, right)
+
+    # http://www.lintcode.com/problem/permutations-ii
+    def permuteUnique(self, nums):
+        le = len(nums)
+        if le == 0:
+            return [[]]
+        elif le == 1:
+            return [nums]
+        else:
+            result = []
+            cur = sorted(nums)
+            result.append(cur[0:])
+            isLast = False
+            while not isLast:
+                i = le - 2
+                while i > -1 and cur[i] >= cur[i + 1]:
+                    i -= 1
+                if i > -1:
+                    j = le - 1
+                    while j > i and cur[j] <= cur[i]:
+                        j -= 1
+                    if j > i:
+                        temp = cur[i]
+                        cur[i] = cur[j]
+                        cur[j] = temp
+                        self.quickSortSection(cur, i + 1, le - 1)
+                        result.append(cur[0:])
+                    else:
+                        isLast = True
+                else:
+                    isLast = True
+            return result
+
     # 找到前n个素数
     def primes(self, n):
         result = [2, 3]
@@ -397,21 +483,67 @@ class Solution:
                     isPrime[j] = False
         return result
 
+
+    # http://www.lintcode.com/zh-cn/problem/subsets/
+    def subsetsR(self, arr, doSort = True):
+        le = len(arr)
+        if le == 0:
+           result = []
+        elif le == 1:
+            result = [arr, []]
+        else:
+            result = []
+            if doSort:
+                arr.sort()
+            subResult = self.subsetsR(arr[1:], doSort = False)
+            for item in subResult:
+                tempArr = arr[0:1]
+                tempArr[1:] = item
+                result.append(tempArr)
+                result.append(item)
+        return result
+
+    def subsets(self, arr):
+        le = len(arr)
+        if le == 0:
+            result = []
+        elif le == 1:
+            result = [arr, []]
+        else:
+            result = [[]]
+            arr.sort()
+            for i in arr:
+                curLe = len(result)
+                for j in range(0, curLe):
+                    tempArr = result[j][0:]
+                    tempArr.append(i)
+                    result.append(tempArr)
+        return result
+
 if __name__ == "__main__":
     solution = Solution()
 
-    print(solution.primesLsThan(10))
+    arr = [1,2,3]
+    # 递归
+    print(solution.subsetsR(arr))
+    print(solution.subsets(arr))
 
+
+    # print(solution.primesLsThan(10))
 
     # print(solution.primes(10))
 
 
-    # TODO 用非递归完成 permute
+    # arr = [1,2,2]
+    # # 非递归，字典顺序
+    # print(solution.permuteUnique(arr))
 
 
     # arr = [1,2,3]
+    # # 递归
     # print(solution.permute(arr))
-
+    # # 非递归，字典顺序
+    # print(solution.permuteNoRecursion(arr))
 
 
     # arr = [1, 2, 3, 3, 4, 5, 10]
