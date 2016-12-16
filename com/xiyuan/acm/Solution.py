@@ -520,13 +520,60 @@ class Solution:
                     result.append(tempArr)
         return result
 
+    # http://www.lintcode.com/problem/subsets-ii
+    def subsetsWithDup(self, arr):
+        le = len(arr)
+        if le == 0:
+            result = []
+        elif le == 1:
+            result = [arr, []]
+        else:
+            result = [[]]
+            arr.sort()
+            i = 0
+            j = 1
+            while i < le:
+                while j < le and arr[j] == arr[i]:
+                    j += 1
+                curLe = len(result)
+                for k in range(i, j):
+                    iToK = arr[i:k + 1]
+                    for l in range(0, curLe):
+                        tempArr = result[l][0:]
+                        tempArr[len(tempArr):] = iToK
+                        result.append(tempArr)
+                i = j
+                j += 1
+        return result
+
+    # http://www.lintcode.com/zh-cn/problem/dices-sum/
+    def dicesSum(self, n):
+        cache = [0 for i in range(0, n * 6 + 1)]
+        cache[0] = 1
+        # for i in range(0, n):
+        #     for j in range(1, 7):
+        #         for k in range(i, i * 6 + 1):
+        #             cache[k + j] += cache[k]
+        # total = 0.0
+        # for i in range(n, n * 6 + 1):
+        #     total += cache[i]
+        # result = [(i, cache[i] / total) for i in range(n, n * 6 + 1)]
+        # return result
+        return []
+
 if __name__ == "__main__":
     solution = Solution()
 
-    arr = [1,2,3]
-    # 递归
-    print(solution.subsetsR(arr))
-    print(solution.subsets(arr))
+    print(solution.dicesSum(2))
+
+
+    # arr = [1,2,2]
+    # print(solution.subsetsWithDup(arr))
+
+
+    # arr = [1,2,3]
+    # print(solution.subsetsR(arr))
+    # print(solution.subsets(arr))
 
 
     # print(solution.primesLsThan(10))
